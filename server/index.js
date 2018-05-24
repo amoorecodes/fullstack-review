@@ -1,24 +1,14 @@
 const express = require('express');
+const parser = require('body-parser');
+const db = require('./../database/index.js');
+const router = require('./router/index.js');
+
 let app = express();
 
-// UNCOMMENT FOR ANGULARJS
-// app.use(express.static(__dirname + '/../angular-client'));
-// app.use(express.static(__dirname + '/../node_modules/angular'));
-
-// UNCOMMENT FOR REACT
-// app.use(express.static(__dirname + '/../react-client/dist'));
-
-app.post('/repos', function(req, res) {
-  // TODO - your code here!
-  // This route should take the github username provided
-  // and get the repo information from the github API, then
-  // save the repo information in the database
-});
-
-app.get('/repos', function(req, res) {
-  // TODO - your code here!
-  // This route should send back the top 25 repos
-});
+app.use(express.static(__dirname + '/../react-client/dist'));
+app.use(parser.json());
+app.use(parser.urlencoded({ extended:true }));
+app.use(router);
 
 let port = 1128;
 

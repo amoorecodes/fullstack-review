@@ -1,16 +1,30 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/fetcher');
+const Repo = require('./models/Repo.js');
+mongoose.connect('mongodb://userUno:userUno1st@ds133550.mlab.com:33550/github');
 
-let repoSchema = mongoose.Schema({
-  // TODO: your schema here!
-});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error'));
+db.once('open', () => db.);
 
-let Repo = mongoose.model('Repo', repoSchema);
+/* maybe err, data? */ 
+let save = (data) => {
 
-let save = (/* TODO */) => {
-  // TODO: Your code here
-  // This function should save a repo or repos to
-  // the MongoDB
+  data.forEach( (instance) => {
+    // console.log(instance.id, 'instance')
+    let newEntry = new Repo({
+      repoID: instance.id,
+      repoName: instance.name,
+      userName: instance.owner.login,
+      forks: instance.forks,
+      starts: instance.stargazers_count
+    });
+
+    newEntry.save((error, repository) => {
+      if (error) throw error;
+      console.log('added to database')
+    })
+  });
 }
 
 module.exports.save = save;
+module.exports.db = db;

@@ -1,20 +1,28 @@
 const request = require('request');
 const config = require('../config.js');
 
-let getReposByUsername = (/* TODO */) => {
-  // TODO - Use the request module to request repos for a specific
-  // user from the github API
+let getReposByUsername = (username, callback) => {
 
-  // The options object has been provided to help you out, 
-  // but you'll have to fill in the URL
   let options = {
-    url: 'FILL ME IN',
+    url: (`https://api.github.com/users/${username}/repos`),
     headers: {
       'User-Agent': 'request',
       'Authorization': `token ${config.TOKEN}`
     }
   };
 
+  const retrieve = (err, res, data) => {
+    // console.log( JSON.parse(data), 'res and data')
+    if (!err && res.statusCode === 200) {
+      let repos = JSON.parse(data); //do we need to parse if we have data parser? 
+      callback(repos);
+    }
+  }
+
+  request(options, retrieve);
+
+
+
 }
 
-module.exports.getReposByUsername = getReposByUsername;
+module.exports = getReposByUsername;
