@@ -9,16 +9,16 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      repos: [1, 2, 3, 4]
+      repos: []
     }
 
   }
 
   componentDidMount() {
-    axios.get('/')
+    axios.get('/repos')
       .then((results) => {
         this.setState({
-          repos: results
+          repos: [...results]
         })
       })
   }
@@ -43,7 +43,7 @@ class App extends React.Component {
   render () {
     return (<div>
       <h1>Github Fetcher</h1>
-      <RepoList repos={this.state.repos}/>
+      <RepoList repos={this.state.repos.}/>
       <Search onSearch={this.search.bind(this)}/>
     </div>)
   }

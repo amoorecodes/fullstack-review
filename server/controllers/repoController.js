@@ -9,23 +9,28 @@ const Repo = require('./../../database/models/Repo.js');
 
 module.exports.loadRepos = (req,res) => {
 
-    Repo.find(null, null, { limit:25 }, (err, results) => {
+    Repo.find({})
+        .sort({ forks: -1})
+        .limit(25)
+        .exec((err, results) => {
         if (err) throw err; 
-        console.log('about to send results', results);
+        // console.log('about to send results', results);
         res.status(200).send(results);
-    })
+    });
+    
 };
 
 module.exports.post = (req,res) => {
     // console.log(save, 'save');
-    Repo.find({username: req.body.username}, null, {limit: 25}, (err, results) => {
+    Repo.find({username: req.body.username}, (err, results) => {
         // console.log(results, 'resutls');
         if(err) throw err;
-        if(results.data) {
-            res.status(200).send(results);
+            // console.log(results.data, 'rse)')
+        if(results) {
+            res.status(200).send('repos alerady exist in database');
         } else {
             getReposByUsername(req.body.username, (data) => {
-                save(data);
+                save(data, (message) => console.log(message));
                 res.status(201).send(data);
             });
         }
